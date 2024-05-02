@@ -10,6 +10,7 @@ if __name__=="__main__":
     parser.add_argument("--device", type=str, default="gpu")
     parser.add_argument("--en_wandb", type=bool, default=False)
     parser.add_argument("--dataset", type=str, default="8813.txt")
+    parser.add_argument("--model", type=str, default="gpt2")
     args = parser.parse_args()
     
     torch.set_printoptions(precision=50)
@@ -20,7 +21,7 @@ if __name__=="__main__":
         # set the wandb project where this run will be logged
         project="LLM-Compressor",
         # group=Group Name
-        name=args.dataset)
+        name=args.model + " " + args.dataset)
         
         wandb.config.current_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
         wandb.config.update(args)
@@ -30,7 +31,7 @@ if __name__=="__main__":
     elif args.device == "cpu":
         device = torch.device("cpu")
 
-    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    tokenizer = AutoTokenizer.from_pretrained(args.model)
     Token_Buffer = Token_Buffer()
     Input_Buffer = Input_Buffer(tokenizer)
     extimated_bits_average = average()
